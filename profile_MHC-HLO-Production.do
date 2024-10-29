@@ -36,7 +36,7 @@
   * User-dependant paths for local repo clone and 11_GLAD folder within the repo
   * Aroob
   if inlist("`c(username)'","wb504672","WB504672") {
-    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Productiontestworkshop\MHC-HLO-Production\"
+    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Production\"
   }
 
 

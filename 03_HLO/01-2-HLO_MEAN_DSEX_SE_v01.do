@@ -7,9 +7,9 @@ set seed 10051990
 set sortseed 10051990
 
 
-use "$clone\03_HLO\output\HLO_MEANS_DSEX_v01.dta", clear
+use "$clone\03_HLO\033_output\HLO_MEANS_DSEX_v01.dta", clear
 gen d_index = exchangerate
-merge m:1 assessment subject level using "$clone/02_exchangerate/output/exchange_rates_se.dta", 
+merge m:1 assessment subject level using "$clone/02_exchangerate/023_output/exchange_rates_se.dta", 
 replace exchangerate_se = 0 if missing(exchangerate_se)
 gen d_index_se = exchangerate_se
 
@@ -49,10 +49,8 @@ ren (score_t se_t HLO_t HLO_t_se) (score se HLO HLO_se)
 ren (score_t_lower score_t_upper score_t_range) (score_lower score_upper score_range)
 ren (HLO_t_lower HLO_t_upper HLO_t_range) (HLO_lower HLO_upper HLO_range)
 
-*cf _all using "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", verbose
-save "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", replace
-
-use "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", clear
+cf _all using "$clone\03_HLO\033_output\HLO_MEAN_DSEX_SE_v01.dta", verbose
+save "$clone\03_HLO\033_output\HLO_MEAN_DSEX_SE_v01.dta", replace
 
 /*Checking with previous:
 ren HLO* n_HLO*
@@ -60,10 +58,10 @@ merge 1:1 cntabb test year n_res subject grade using "N:\GDB\WorldBank_HLO_worki
 gen diff = n_HLO - HLO
 gen diff_se = n_HLO_se - HLO_se
 encode test, gen(test_n)
-encode subject, gen(subject_n)
 mean diff, over(test_n)
-mean diff if test == "LLECE", over(test_n subject_n)
 mean diff_se, over(test_n)
+*Standard errors have increased slightly.
+
 
 
 

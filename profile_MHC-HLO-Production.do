@@ -1,8 +1,8 @@
 *==============================================================================*
 * Measuring Human Capital - Harmonized Learning Outcomes
-* Project information at: https://github.com/worldbank/MHC-HLO-Production
+* Project information at: https://github.com/worldbank/MHC-HLO
 *
-* This initialization do sets paths, globals and install programs for Repo
+* This initialization do sets paths, globals and install programs for GLAD Repo
 *==============================================================================*
 
 
@@ -14,7 +14,7 @@
   capture log         close _all
   set more            off
   set varabbrev       off, permanently
-  set maxvar          120000, permanently
+  set maxvar          10000
   version             14
   *-----------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@
   * User-dependant paths for local repo clone and 11_GLAD folder within the repo
   * Aroob
   if inlist("`c(username)'","wb504672","WB504672") {
-    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Productiontestworkshop\MHC-HLO-Production\"
+    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO\"
   }
 
 
@@ -44,7 +44,7 @@
   /* WELCOME!!! ARE YOU NEW TO THIS CODE?
      Add yourself by copying the lines above, making sure to adapt your clone */
   else {
-    noi disp as error _newline "{phang}Your username [`c(username)'] could not be matched with any profile. Please update profile_MHC-HLO-Production do-file accordingly and try again.{p_end}"
+    noi disp as error _newline "{phang}Your username [`c(username)'] could not be matched with any profile. Please update profile_GLAD-Production do-file accordingly and try again.{p_end}"
     error 2222
   }
 
@@ -55,7 +55,7 @@
   * Download and install required user written ado's
   *-----------------------------------------------------------------------------
   * Fill this list will all user-written commands this project requires
-  local user_commands fs pv seq mdesc alphawgt touch polychoric eststo
+  local user_commands fs pv seq mdesc alphawgt touch polychoric
 
   * Loop over all the commands to test if they are already installed, if not, then install
   foreach command of local user_commands {
@@ -63,7 +63,6 @@
     if _rc == 111 {
       * Polychoric is not in SSC so is checked separately
       if "`command'" == "polychoric" net install polychoric, from("http://staskolenikov.net/stata")
-	  if "`command'" == "eststo" net install eststo, from("http://www.stata-journal.com/software/sj14-2/")
       *All other commands installed through SSC
       else  ssc install `command'
     }
@@ -73,17 +72,17 @@
   *-----------------------------------------------------------------------------
   * Flag that profile was successfully loaded
   *-----------------------------------------------------------------------------
-  global profile_is_loaded = 1
-  noi disp as res _newline "{phang} Profile sucessfully loaded.{p_end}"
+  global GLAD_profile_is_loaded = 1
+  noi disp as res _newline "{phang}GLAD profile sucessfully loaded.{p_end}"
   *-----------------------------------------------------------------------------
 
   *-------------------------------------------------------------------------------
 * Setup for this task
 *-------------------------------------------------------------------------------
 * Check that project profile was loaded, otherwise stops code
-cap assert ${profile_is_loaded} == 1
+cap assert ${GLAD_profile_is_loaded} == 1
 if _rc != 0 {
-  noi disp as error "Please execute the profile_MHC-HLO-Production initialization do in the root of this project and try again."
+  noi disp as error "Please execute the profile_GLAD initialization do in the root of this project and try again."
   exit
 }
 
@@ -98,12 +97,5 @@ global shortcut = "${shortcut_GLAD}"  // NEVER COMMIT ANY CHANGES IN THIS LINE
 * Global paths that may serve as input and output for the overall task
 global input  "${network}/GDB/HLO_Database" // Where EDURAW files will be read from if datalibweb==0
 global output "${clone}/outputs"  // Where GLAD.dta files will be saved
-
-*Creating folder structure:
-foreach folder in 02_exchangerate 03_HLO 04_HLO-HCI 05_MHC {
-	cd $clone/`folder'
-	capture quietly: mkdir temp
-	capture quietly: mkdir output
-}
 
 

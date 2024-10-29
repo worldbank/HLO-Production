@@ -24,7 +24,7 @@ set more off
 clear 
 global path = "$clone"     //user = SAI
 
-use "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", clear
+use "$clone\03_HLO\033_output\HLO_MEAN_DSEX_SE_v01.dta", clear
 	
 *******************************************************************************/
 // 3. Standardize variable names and clean up various issues in HLO metadata file
@@ -600,14 +600,8 @@ drop hlo_*_upper_* hlo_*_lower_*
 	label var hlo_mf_note "Generic source note for HLO data.  Also contains qualifier for non-representative China and India scores"
 
 // Save dataset
-sa "$clone\04_HLO-HCI\output\hlo_20Aug2020.dta", replace	
-sa "$clone\04_HLO-HCI\output\hlo.dta", replace
-/*
-ren * *_new
-ren (wbcode_new year_new) (wbcode year)	
-merge 1:1 wbcode year using "$clone\04_HLO-HCI\043_output\hlo_Ritika.dta", assert(match using) keep(match) nogen
-gen hlo_diff = hlo_mf_new - hlo_mf
-
+sa "$clone\04_HLO-HCI\043_output\hlo_20Aug2020.dta", replace	
+sa "$clone\04_HLO-HCI\043_output\hlo.dta", replace	
 
 // Compare with previous version of dataset
 // cf _all using "$prev", verbose 

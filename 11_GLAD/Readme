@@ -1,0 +1,4 @@
+Instructions for executing GLAD do files
+
+1) Adjust paths in profile_GLAD-Production to ensure execution according to the file paths on your computer.
+2) Execute create_GLADs.

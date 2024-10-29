@@ -3,10 +3,7 @@
 /*This do file:
 1)	Develops standard errors for exchange rate for Harmonized Learning Outcomes.
 */
-clear
-clear matrix
-clear mata
-set maxvar 120000
+
 global master_seed  10051990
 set seed 10051990 
 set sortseed 10051990   // Ensures reproducibility
@@ -151,10 +148,6 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 			
 			drop score se 
 			reshape wide score_* , i(cntabb window subject level) j(test) string
-			*Placeholder for replication:
-			if "`assessment'" == "LLECE" & inlist("`s'","math","science") {
-				expand 2 if cntabb == "CHL"
-			}
 
 
 			*keep if !missing(score_*`reference_assessment') & !missing(score_*`assessment')
@@ -255,5 +248,5 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 keep assessment subject level exchange_rate_PISA_se exchange_rate_LLECE_se exchange_rate_SACMEQ_se exchange_rate_PASEC_se exchange_rate_PASEC_2014_se exchange_rate_EGRA_se exchange_rate_PILNA_se
 egen exchangerate_se = rowtotal(exchange_rate*)
 keep subject level assessment exchangerate_se
-*cf _all using "$clone/02_exchangerate/output/exchange_rates_se.dta", verbose
-save "$clone/02_exchangerate/output/exchange_rates_se.dta", replace
+cf _all using "$clone/02_exchangerate/023_output/exchange_rates_se.dta", verbose
+save "$clone/02_exchangerate/023_output/exchange_rates_se.dta", replace

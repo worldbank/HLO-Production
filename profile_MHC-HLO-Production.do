@@ -24,6 +24,7 @@
   *-----------------------------------------------------------------------------
   * Network drive is always the same for everyone, but may not be available
   global network 	"//wbgfscifs01/GEDEDU/"
+  display "${network}"
   cap cd "${network}"
   if _rc == 170   global network_is_available 1
   else            global network_is_available 0
@@ -36,10 +37,13 @@
   * User-dependant paths for local repo clone and 11_GLAD folder within the repo
   * Aroob
   if inlist("`c(username)'","wb504672","WB504672") {
-    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Productiontestworkshop\MHC-HLO-Production\"
+    global clone "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Production2\MHC-HLO-Production\"
   }
 
-
+   else if inlist("`c(username)'","Wb588482","Wb588482") {
+    global clone "Y:\Personal\WB588482\MHC-HLO-Production"
+	}
+display `clone'
 
   /* WELCOME!!! ARE YOU NEW TO THIS CODE?
      Add yourself by copying the lines above, making sure to adapt your clone */
@@ -100,10 +104,9 @@ global input  "${network}/GDB/HLO_Database" // Where EDURAW files will be read f
 global output "${clone}/outputs"  // Where GLAD.dta files will be saved
 
 *Creating folder structure:
-foreach folder in 02_exchangerate 03_HLO 04_HLO-HCI 05_MHC {
+foreach folder in 02_exchangerate 03_HLO 04_HLO_HCI 05_MHC {
 	cd $clone/`folder'
 	capture quietly: mkdir temp
 	capture quietly: mkdir output
 }
-
 

@@ -52,18 +52,16 @@ ren (HLO_t_lower HLO_t_upper HLO_t_range) (HLO_lower HLO_upper HLO_range)
 *cf _all using "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", verbose
 save "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", replace
 
-use "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", clear
-
 /*Checking with previous:
 ren HLO* n_HLO*
 merge 1:1 cntabb test year n_res subject grade using "N:\GDB\WorldBank_HLO_workingcopy\HLO\HLO_v01\2-output\HLO_MEAN_DSEX_SE_v01.dta"
 gen diff = n_HLO - HLO
 gen diff_se = n_HLO_se - HLO_se
 encode test, gen(test_n)
-encode subject, gen(subject_n)
 mean diff, over(test_n)
-mean diff if test == "LLECE", over(test_n subject_n)
 mean diff_se, over(test_n)
+*Standard errors have increased slightly.
+
 
 
 

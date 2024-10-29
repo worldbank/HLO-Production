@@ -221,5 +221,5 @@ replace reference_assessment = f_reference_assessment if missing(reference_asses
 drop f_reference_assessment
 egen exchangerate = rowtotal(exchange_rate*)
 keep subject level assessment reference_assessment exchangerate
-*cf _all using "$clone/02_exchangerate/output/exchange_rates.dta", verbose
+cf _all using "$clone/02_exchangerate/output/exchange_rates.dta", verbose
 save "$clone/02_exchangerate/output/exchange_rates.dta", replace

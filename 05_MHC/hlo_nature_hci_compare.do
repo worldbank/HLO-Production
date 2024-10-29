@@ -56,6 +56,13 @@ Inputs:
 	local corr: di %4.3f r(rho) 
 	scatter harmonizedtestscores hlo, mlabel(wbcode) xtitle("New HLO Score") ytitle("Old HCI HLO Score") ///
 	subtitle("Correlation `corr'", position(4) ring(0) margin(small) size(small) box fcolor(white))
+	
+	twoway (scatter hlo harmonizedtestscores, mlabel(wbcode)) (line harmonizedtestscores harmonizedtestscores), ytitle("New HLO Score") xtitle("Old HCI HLO Score") ///
+	subtitle("Correlation `corr'", position(4) ring(0) margin(small) size(small) box fcolor(white)) legend(off)
+	gen diff = hlo - harmonizedtestscores
+	kdensity diff
+	alorenz diff, gp ytitle("Difference between new HLO and" "HLO scores released as Harmonized Test Scores") title("") xtitle("Proportion of countries included in HCI")
+
 		
 	egen rank_hci = rank(harmonizedtestscores)
 	egen rank_new_hlo = rank(hlo)

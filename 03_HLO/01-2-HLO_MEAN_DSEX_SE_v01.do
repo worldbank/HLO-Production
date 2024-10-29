@@ -54,7 +54,7 @@ save "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", replace
 
 use "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01.dta", clear
 
-/*Checking with previous:
+*Checking with previous:
 ren HLO* n_HLO*
 merge 1:1 cntabb test year n_res subject grade using "N:\GDB\WorldBank_HLO_workingcopy\HLO\HLO_v01\2-output\HLO_MEAN_DSEX_SE_v01.dta"
 gen diff = n_HLO - HLO

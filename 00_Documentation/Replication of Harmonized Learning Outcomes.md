@@ -13,7 +13,6 @@ This repository contains all materials necessary to replicate the collection of 
 We did intentionally leave the `input` flexible, so that external researchers wishing to replicate and adapt this code can do so with minimal adaptation required. All the code is automatically rendered by GitHub, so you can immediately inspect the code by navigating the folders.
 
 To replicate, first execute [profile_MHC_HLO_Production.do](https://github.com/worldbank/MHC-HLO-Production/blob/main/profile_MHC-HLO-Production.do). 
-Then execute [run.do](https://github.com/worldbank/MHC-HLO-Production/blob/main/run.do)
 
 ### Bug reports and feature requests
 

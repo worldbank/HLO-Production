@@ -50,7 +50,11 @@ ren (score_t_lower score_t_upper score_t_range) (score_lower score_upper score_r
 ren (HLO_t_lower HLO_t_upper HLO_t_range) (HLO_lower HLO_upper HLO_range)
 
 cf _all using "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022_P_L.dta", verbose
-save "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022_P_L.dta", replace
+cf _all using "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022_L_P_Sun.dta", verbose
+*isid cntabb year test grade subject
+*merge 1:1 cntabb year test grade subject using "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022_L_P_Sun
+save "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022.dta", replace
+
 
 /*Checking
 use "$clone\03_HLO\output\HLO_MEAN_DSEX_SE_v01_2022_P.dta", clear

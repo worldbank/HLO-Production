@@ -1,0 +1,11 @@
+countrycode,year,nationally_representative,regionally_representative,idgrade,language,lang_instr,score_egra_read,se,learner_weight
+NPL,2014,1,1,2,Nepali,Nepali,21.66666667,1.67,1
+NPL,2014,1,1,3,Nepali,Nepali,40,1.67,1
+SSD,2016,0,0,3,English,English,14,,1
+SSD,2017,0,0,3,English,English,15,,1
+TJK,2018,1,1,2,Tajik,,36,,0.756097561
+TJK,2018,1,1,2,Russian,,58,,0.243902439
+TJK,2018,1,1,4,Tajik,,44,,0.756097561
+TJK,2018,1,1,4,Russian,,36,,0.243902439
+CAF,2019,0,1,3,French,,22,,0.537883502
+CAF,2019,0,1,4,French,,42,,0.462116498

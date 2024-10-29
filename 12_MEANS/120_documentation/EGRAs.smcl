@@ -1,0 +1,32 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO\12_MEANS/120_documentation\EGRAs.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}24 Jun 2022, 13:16:09
+{txt}r; t=0.01 13:16:09
+
+{com}. 
+{txt}end of do-file
+
+r; t=0.02 13:16:09
+{com}. do "N:\GDB\Personal\WB504672\WorldBank_Github\MHC-HLO-Production-EGRABranch\MHC-HLO-Production_EGRABranch\profile_MHC-HLO-Production.do"
+{txt}
+{com}. *==============================================================================*
+. * Measuring Human Capital - Harmonized Learning Outcomes
+. * Project information at: https://github.com/worldbank/MHC-HLO-Production
+. *
+. * This initialization do sets paths, globals and install programs for Repo
+. *==============================================================================*
+. 
+. 
+. 
+.   *-----------------------------------------------------------------------------
+.   * General program setup
+.   *-----------------------------------------------------------------------------
+.   clear               all
+{res}{txt}r; t=0.05 13:17:17
+
+{com}.   capture log         close _all
+{smcl}
+{com}{sf}{ul off}

@@ -15,7 +15,7 @@
 set more off
 clear
 
-use "$clone\04_HLO-HCI\output\hlo.dta", clear
+use "$clone\04_HLO-HCI\043_output\hlo.dta", clear
 
 
 /******************************************************************************/
@@ -34,6 +34,7 @@ use "$clone\04_HLO-HCI\output\hlo.dta", clear
 			}
 		gen hlo_`gen'_source_2020=hlo_`gen'_source[_n-1] if year==2020
 	}
+	gen hlo_new_2020=L1.hlo_new_fill if year==2020
 	
 // Fill the 2018 cross-section with the most recent observation as of 2019
 	foreach gen in mf m f {
@@ -42,6 +43,7 @@ use "$clone\04_HLO-HCI\output\hlo.dta", clear
 			}
 		gen hlo_`gen'_source_2018=hlo_`gen'_source[_n-3] if year==2020
 	}
+	gen hlo_new_2018=L3.hlo_new_fill if year==2020
 
 // Some rules for building the 2010 cross section
 // 0. If country has only one test, it will not show up in 2010 cross section
@@ -248,33 +250,8 @@ foreach gen in mf m f {
 	replace hlo_`gen'_source_2010=hlo_`gen'_source[_n-9] if year==2020 & wbcode=="GMB"
 	}
 
-save "$clone\04_HLO-HCI\output\hlo_data.dta", replace
-save "$clone\04_HLO-HCI\output\hlo_data_20Aug2020.dta", replace
-
-/*Checking with Ritikas files:
-ren * *_new
-ren (wbcode_new year_new) (wbcode year)
-merge 1:1 wbcode year using "$clone\04_HLO-HCI\043_output\hlo_data_Ritika.dta"
-gen diff = hlo_mf_new - hlo_mf
-encode hlo_mf_source_new, gen(test_n)
-mean diff, over(test_n)
-gen diff_2010 = hlo_mf_fill_2010_new - hlo_mf_fill_2010
-encode hlo_mf_source_2010_new, gen(test_2010_n)
-mean diff_2010, over(test_2010_n)
-
-gen diff_2010 = hlo_mf_fill_2010_new - hlo_mf_fill_2010
-encode hlo_mf_source_2010_new, gen(test_2010_n)
-mean diff_2010, over(test_2010_n)
-
-gen diff_2018 = hlo_mf_fill_2018_new - hlo_mf_fill_2018
-encode hlo_mf_source_2018_new, gen(test_2018_n)
-mean diff_2018, over(test_2018_n)
-
-gen diff_2020 = hlo_mf_fill_2020_new - hlo_mf_fill_2020
-encode hlo_mf_source_2020_new, gen(test_2020_n)
-mean diff_2020, over(test_2020_n)
-
-
+save "$hlodta_out\hlo_data.dta", replace
+save "$hlodta_out\hlo_data_20Aug2020.dta", replace
 /*
 
 gen genmiss=.

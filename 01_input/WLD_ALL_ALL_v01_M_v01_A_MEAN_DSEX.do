@@ -1,12 +1,8 @@
 *Author: Syedah Aroob Iqbal
-*Brings in mean data from TIMSS 2019 and PASEC 2019 and append with the previous means database:
-
-use "$clone\01_input\LLECE_2019_updated_V2.dta", clear
-tostring grade, replace
-save "$clone\01_input\LLECE_2019_updated_V2_to_append.dta", replace
+*Brings in mean data from TIMSS 2019, PASEC 2019, LLECE 2019 and EGRAs and append with the previous means database:
 
 *Preparing for append:
-use "$clone\01_input\WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX_2022_PASEC_LLECE_SEA_PLM.dta", clear
+use "$clone\01_input\merged_LLECE_PASEC_SEAPLM_2019.dta", clear
 tostring grade, replace
 keep if inlist(test,"PASEC")
 append using "$clone\01_input\LLECE_2019_updated_V2_to_append.dta"
@@ -20,6 +16,20 @@ drop COUNTRY
 tostring grade, replace
 save "$clone\01_input\WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX_LLECE_2013_tocheck.dta", replace
 
+*Cleaning EGRA data to append:
+use "$clone\01_input\WLD_All_EGRA_v01_M_v03_A_MEAN.dta", clear
+ren (countrycode) (cntabb)
+gen grade = "2-4"
+gen subgroup = "_t" if indicator == "scorereadtotal"
+replace subgroup = "_f" if indicator == "scorereadfemale"
+replace subgroup = "_m" if indicator == "scorereadmale"
+gen n_res = 1
+gen subject = "reading"
+drop indicator
+reshape wide value se n, i(cntabb year test grade subject) j(subgroup) string
+ren value* score*
+ren *_t *
+save "$clone\01_input\WLD_All_EGRA_v01_M_v03_A_MEAN_toappend.dta", replace
 
 use "N:\datalib-edu\HLO_Database\CNT\WLD\WLD_2019_TIMSS\WLD_2019_TIMSS_v01_M_v01_A_GLAD\Data\Harmonized\WLD_2019_TIMSS_v01_M_wrk_A_GLAD_CLO.dta", clear
 *Keep only the variables required:
@@ -105,6 +115,9 @@ replace se_m = se_m + score_m_LLECE_2019_reading_se if test == "LLECE" & year ==
 replace se_m = se_m + score_m_LLECE_2019_science_se if test == "LLECE" & year == 2019 & subject == "science"
 
 drop *LLECE*
+
+append using "$clone\01_input\WLD_All_EGRA_v01_M_v03_A_MEAN_toappend.dta"
+
 cf _all using "$clone\01_input\WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX_2022_P_L.dta"
 save "$clone\01_input\WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX_2022_P_L.dta", replace
 

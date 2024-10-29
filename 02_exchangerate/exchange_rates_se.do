@@ -255,5 +255,5 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 keep assessment subject level exchange_rate_PISA_se exchange_rate_LLECE_se exchange_rate_SACMEQ_se exchange_rate_PASEC_se exchange_rate_PASEC_2014_se exchange_rate_EGRA_se exchange_rate_PILNA_se
 egen exchangerate_se = rowtotal(exchange_rate*)
 keep subject level assessment exchangerate_se
-*cf _all using "$clone/02_exchangerate/output/exchange_rates_se.dta", verbose
+cf _all using "$clone/02_exchangerate/output/exchange_rates_se.dta", verbose
 save "$clone/02_exchangerate/output/exchange_rates_se.dta", replace

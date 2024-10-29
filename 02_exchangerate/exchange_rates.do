@@ -158,6 +158,8 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 			
 			*Doubloon index for each cycle of assessment:
 			gen exchange_rate_`assessment'_`reference_assessment' = score`reference_assessment'/score`assessment'
+			save "$clone/02_exchangerate/temp/`assessment'_`s'_`l'_windows_exchange_rate.dta", replace
+
 
 			collapse exchange_rate_`assessment'_`reference_assessment', by(subject level)
 			gen assessment = "`assessment'"
@@ -221,5 +223,5 @@ replace reference_assessment = f_reference_assessment if missing(reference_asses
 drop f_reference_assessment
 egen exchangerate = rowtotal(exchange_rate*)
 keep subject level assessment reference_assessment exchangerate
-*cf _all using "$clone/02_exchangerate/output/exchange_rates.dta", verbose
+cf _all using "$clone/02_exchangerate/output/exchange_rates.dta", verbose
 save "$clone/02_exchangerate/output/exchange_rates.dta", replace

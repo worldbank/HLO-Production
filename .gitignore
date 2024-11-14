@@ -42,7 +42,7 @@
 # Stata
 !/**/*.do
 !/**/*.ado
-!/*input/*.dta
+!/*rawdata/**/*.dta
 
 # R
 !/**/*.R

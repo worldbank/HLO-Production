@@ -23,8 +23,11 @@ do "${clone}/01_data/012_programs/012_run.do"
 * TASK 02: Hotfixes
 do "${clone}/02_hotfixes/022_programs/022_run.do"
 
-* TASK 03: __
-*do "${clone}/03_/02_programs/032_run.do"
+* TASK 03: Harmonization
+do "${clone}/03_harmonization/032_programs/032_run.do"
+
+* TASK 04: Creating HLOS
+do "${clone}/04_creating_hlos/042_programs/042_run.do"
 
 
 *-------------------------------------------------------------------------------

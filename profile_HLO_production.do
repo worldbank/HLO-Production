@@ -23,7 +23,7 @@
   set more            off
   set varabbrev       off, permanently
   set emptycells      drop
-  set maxvar          2048
+  set maxvar          32000
   set linesize        135
   version             15
   *-----------------------------------------------------------------------------

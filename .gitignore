@@ -67,6 +67,9 @@
 # Matlab
 !/**/*.m
 
+# Placeholder Word docs
+!/**/*.docx
+
 # Markdown
 !/**/*.md
 

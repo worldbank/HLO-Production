@@ -31,6 +31,7 @@ merge 1:1 cntabb test year subject grade using "${clone}/01_data/013_output/WLD_
 local variables = "score se score_m se_m score_f se_f n_f n_m n"
 foreach var of local variables {
 	replace `var'_clo = `var' if _merge == 1
+	replace `var'_clo = `var' if _merge == 3 & `var'_clo != `var'
 }
 
 * Dropping the observations that are present in the replicated database and not the original database

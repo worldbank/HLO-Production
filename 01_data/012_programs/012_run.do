@@ -1,14 +1,13 @@
 *==============================================================================*
-* Harmonized Learning Outcome (HLO)
-* Project information at: https://github.com/worldbank/...
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-* 01 MASTER
-* EduAnalytics Team
-* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org)
+* Step: 012_run
+* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
 * Date created: 2024-November-11
 
 /* Description: this do-file create globals and runs the do files that will
-download the CLOs, and  */
+execute Step 1 of the Repo */
 *==============================================================================*
 
 * =========================================== *
@@ -20,26 +19,6 @@ global year		2024
 global month 	11
 global day 		11
 global date		"${year}${month}${day}"
-
-/*
-
-Justin to edit this part
-
-* Root folder
-** Note: add your root directory below line 28
-if c(username) == "wb607872" {
-	global root "C:\Users\\`c(username)'\OneDrive - WBG\Documents\EduAnalytics\HLO" 
-}
-
-* Change directory 
-cd "${root}" 
-
-* Subfolders
-global raw 		"${root}/01_rawdata"
-global code 	"${root}/02_code"
-global output 	"${root}/03_output"
-
-*/
 
 
 * =========================================== *

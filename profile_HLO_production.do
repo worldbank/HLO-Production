@@ -1,10 +1,12 @@
 *==============================================================================*
-* Measuring Human Capital - Harmonized Learning Outcomes
-* Project information at: https://github.com/worldbank/__
-*
-* This initialization do sets paths, globals and install programs for Repo
-*==============================================================================*
-* quietly {
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
+
+* Step: Profile Initialization
+* Authors: EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Date created: 2024-November-13
+
+* Description: This initialization do sets paths, globals and install programs for Repo
 
   /*
   Steps in this do-file:
@@ -15,6 +17,11 @@
   5) Flag that profile was successfully loaded
   */
 
+*==============================================================================*
+
+
+ quietly {
+
   *-----------------------------------------------------------------------------
   * 1) General program setup
   *-----------------------------------------------------------------------------
@@ -23,22 +30,10 @@
   set more            off
   set varabbrev       off, permanently
   set emptycells      drop
-  set maxvar          32000
+  set maxvar          32000 // Note: This is atypical of EduAnalytics practices, but it is neccesary for executing Step 4 of the code
   set linesize        135
-  version             15
+  version             16
   *-----------------------------------------------------------------------------
-
-/*
-  *-----------------------------------------------------------------------------
-  * Define network path
-  *-----------------------------------------------------------------------------
-  * Network drive is always the same for everyone, but may not be available
-  global network 	"//wbgfscifs01/GEDEDU/"
-  cap cd "${network}"
-  if _rc == 170   global network_is_available 1
-  else            global network_is_available 0
-  *-----------------------------------------------------------------------------
-*/
 
   *-----------------------------------------------------------------------------
   * 2) Define user-dependant path for local clone repo
@@ -120,7 +115,7 @@
 
 
   *-----------------------------------------------------------------------------
-  * Download and install required user written ado's
+  * 4) Download and install required user written ado's
   *-----------------------------------------------------------------------------
   * Fill this list will all user-written commands this project requires
   local user_commands fs pv seq mdesc alphawgt touch keeporder eststo // polychoric
@@ -129,7 +124,7 @@
   foreach command of local user_commands {
     cap which `command'
     if _rc == 111 {
-      * Polychoric is not in SSC so is checked separately -- line of code below does not work
+      * Note: polychoric is not currently available, so the line of code below is commented out
       *if "`command'" == "polychoric" net install polychoric, from("http://staskolenikov.net/stata")
 	  if "`command'" == "eststo" net install eststo, from("http://www.stata-journal.com/software/sj14-2/")
       *All other commands installed through SSC
@@ -144,30 +139,4 @@
   noi disp as result _n `"{phang}`this_repo' clone sucessfully set up (${clone}).{p_end}"'
   global HLO_profile_is_loaded = 1
   *-----------------------------------------------------------------------------
-*}
-
-
-/*
-  *-------------------------------------------------------------------------------
-* Setup for this task
-*-------------------------------------------------------------------------------
-* Check that project profile was loaded, otherwise stops code
-cap assert ${profile_is_loaded} == 1
-if _rc != 0 {
-  noi disp as error "Please execute the profile_MHC-HLO-Production initialization do in the root of this project and try again."
-  exit
 }
-
-* Execution parameters
-global master_seed  10051990
-set seed 10051990 
-set sortseed 10051990   // Ensures reproducibility
-global from_datalibweb = 0   // If 1, uses datalibweb, if not 1, it takes raw .dtas in $network_HLO_DB
-global overwrite_files = 0   // If 1, it always creates each GLAD.dta file, even if it already exists, and overwrites any old file
-global shortcut = "${shortcut_GLAD}"  // NEVER COMMIT ANY CHANGES IN THIS LINE
-
-* Global paths that may serve as input and output for the overall task
-global input  "${network}/GDB/HLO_Database" // Where EDURAW files will be read from if datalibweb==0
-global output "${clone}/outputs"  // Where GLAD.dta files will be saved
-
-

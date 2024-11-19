@@ -1,10 +1,12 @@
-
 *==============================================================================*
-*! HLO
-*! Project information at: https://github.com/worldbank/...
-*! EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-*! MASTER RUN: Executes all tasks sequentially
+* Step: Run the Repo
+* Authors: EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Date created: 2024-November-13
+
+* Description: This is the Master Run file -- it executes all tasks in the repo sequentially
 *==============================================================================*
 
 * Check that project profile was loaded, otherwise stops code
@@ -28,6 +30,4 @@ do "${clone}/03_harmonization/032_programs/032_run.do"
 
 * TASK 04: Creating HLOS
 do "${clone}/04_creating_hlos/042_programs/042_run.do"
-
-
 *-------------------------------------------------------------------------------

@@ -1,14 +1,13 @@
 *==============================================================================*
-* Harmonized Learning Outcome (HLO)
-* Project information at: https://github.com/worldbank/...
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-* 03 PREPARE
-* EduAnalytics Team
-* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org)
+* Step: 0122_PREPARE
+* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
 * Date created: 2024-November-11
 
 /* Description: this do-file prepares the dataset to be comparable with 
-'WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX', located in the network. */
+'WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX.dta', located in the network. */
 *==============================================================================*
 
 * =========================================== *

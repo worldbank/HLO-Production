@@ -1,20 +1,17 @@
 *==============================================================================*
-* Harmonized Learning Outcome (HLO)
-* Project information at: https://github.com/worldbank/...
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-* 02_hotfixes
-* EduAnalytics Team
-* Authors: Justin Kleczka (jkleczka@worldbank.org)
+* Step: 0221 - Prepare Hotfixes for data
+* Authors: Justin Kleczka (jkleczka@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
 * Date created: 2024-November-13
 
 /* Description: 
 This do-file compares the WLD_ALL_ALL_clo.dta that was created 
-in the 01_data step with 'WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX', located in the network 
+in the 01_data step with the original 'WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX.dta' located in the network 
 and prepares the replicated dataset for use in Step 3
 */
-
 *==============================================================================*
-
 
 * ========================================================== *
 * Merging and Comparing the Original and Replicated datasets
@@ -30,8 +27,8 @@ merge 1:1 cntabb test year subject grade using "${clone}/01_data/013_output/WLD_
 * This loop replaces any empty observations in our replicated database with the values from the original database
 local variables = "score se score_m se_m score_f se_f n_f n_m n"
 foreach var of local variables {
-	replace `var'_clo = `var' if _merge == 1
-	replace `var'_clo = `var' if _merge == 3 & `var'_clo != `var'
+	replace `var'_clo = `var' if _merge == 1 // This replaces the empty observations in the replicated database with the values from the original database
+	replace `var'_clo = `var' if _merge == 3 & `var'_clo != `var' // This replaces the matched observations during the merge that have differing values with the values from the original database
 }
 
 * Dropping the observations that are present in the replicated database and not the original database
@@ -56,11 +53,10 @@ foreach var of local variables {
 	rename `var'_clo `var'
 }
 
-* reordering the dataset to exactly match the original dataset
+* Reordering the dataset to exactly match the original dataset
 order cntabb test year n_res subject grade score se score_m se_m score_f se_f n_f n_m n
-browse
 
 * Saving the dataset for use in Step 3
 save "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", replace
 
-*JK note to self: should we keep the merge indicator so we can know which observations were recreated and which were hotfixed?
+*JK note to self: should we keep the _merge indicator so we can know which observations were recreated and which were hotfixed?

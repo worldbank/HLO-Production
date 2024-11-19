@@ -1,35 +1,18 @@
-version 16
 *==============================================================================*
-* HLO
-* Project information at: https://github.com/worldbank/
-*
-* TASK 04_creating_hlos:
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
+
+* Step: 042_run
+* Authors: 
+* Date created: 2024-November-13
+
+/* Description: this do-file runs the .do files needed to execute Step 4 of the Repo */
 *==============================================================================*
 
-
-*-------------------------------------------------------------------------------
-* Setup for this task
-*-------------------------------------------------------------------------------
-* Check that project profile was loaded, otherwise stops code
-cap assert ${HLO_profile_is_loaded} == 1
-if _rc != 0 {
-  noi disp as error "Please execute the profile_HLO_production initialization do in the root of this project and try again."
-  exit
-}
-
-*-------------------------------------------------------------------------------
-* Execution parameters
-global master_seed  17893   // Ensures reproducibility
-
-
-*-------------------------------------------------------------------------------
-* Subroutines for this task
-*-------------------------------------------------------------------------------
-
+* =========================================== *
+* Run the do files
+* =========================================== *
 do "${clone}/04_creating_hlos/042_programs/0421_hlo.do"
 do "${clone}/04_creating_hlos/042_programs/0422_hlo_prep.do"
-
-
-
 *-----------------------------------------------------------------------------
 

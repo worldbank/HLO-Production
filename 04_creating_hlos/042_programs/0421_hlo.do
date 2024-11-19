@@ -1,9 +1,12 @@
-/******************************************************************************/
-// Purpose		: Prepares test score data for merge with HCI 2020 database - as done by the HCI team originally with some changes from the EduAnalytics team
-// Output data	: hlo.dta
-// Last edited	: Nov 14, 2024
-// Last run		: Nov 15, 2024
-// Written by	: Most of the code is from Ritika (based on Aart's 2018 versions) with some minor syntax changes by Anirudh (EduAnalytics team)
+*==============================================================================*
+* Harmonized Learning Outcome (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
+
+* Step: 0421_hlo.do
+* Authors: Most of the code is from Ritika (based on Aart's 2018 versions) with some minor syntax changes by Anirudh (EduAnalytics team)
+* Date created: 2024-November-13
+
+/* Description: Prepares test score data for merge with HCI 2020 database - as done by the HCI team originally with some changes from the EduAnalytics team */
 
 /* Structure of this do file:
 1. Preliminaries
@@ -13,8 +16,8 @@
 5. Combine test scores from different programs into smooth-as-possible unique country x year time series
 6. Fill in missing data with lags
 7. Label variables and save dataset
-*/
-/******************************************************************************/
+
+*==============================================================================*
 
 *******************************************************************************/
 // 1. Preliminaries
@@ -657,10 +660,21 @@ twoway (scatter hlo_mf year if wbcode=="`ctry'", /*connect(J) lwidth(thick)*/ ml
 STOP
 */
 
+/******************************************************************************/
+// Comparing hlo_new.dta we produce with the version shared by Ritika
+/******************************************************************************/
+*Justin having trouble accessing SharePoint, so using a personal download of the file for now
+cf _all using "C:\Users\wb633382\Downloads\hlo_data.dta", verbose 
 	
-	
-	
-	
+local discrepancies 5334 5335 8247 8250 8251 10110 10111 10112 10113 10114 10434 10435 10436 10437 10438 11166 11167 11243 11244 11245 11246 11247 11248 12135 12136 12137 12138 12139 12300 12301 13188 13189 13191 13192 14160 14161 14163 14164 14404 14405 14406 14407 15942 15943 15944 15945 15946 16428 16431 16432 17076 17077 17078 17079 17080
+
+// Browse observations matching the list of observation numbers
+gen flag = 0
+foreach obs_num in `discrepancies' {
+    replace flag = 1 if _n == `obs_num'
+}
+browse if flag == 1
+* JK Analysis: as per the note (is this from Ritika?) in line 646, it appears that all or most of the discrepancies are related to countries using PILNA
 	
 	
 	

@@ -1,15 +1,18 @@
-/******************************************************************************/
-// Purpose		: Creates an HLO panel for 2010, 2018 and 2020 - as done by the HCI team originally
-// Output data	: hlo_data.dta
-// Last edited	: Nov 14, 2024
-// Last run		: Nov 15, 2024
-// Written by	: Most of the code is from Ritika's HCI 2020 workflow with some minor syntax changes by Anirudh - EduAnalytics team (abharadwaj2@worldbank.org)
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
+
+* Step: 0422_hlo_prep.do
+* Authors:  Most of the code is from Ritika's HCI 2020 workflow with some minor syntax changes by Anirudh - EduAnalytics team (abharadwaj2@worldbank.org)
+* Date created: 2024-November-14
+
+* Description: Creates an HLO panel for 2010, 2018 and 2020 - as done by the HCI team originally
 
 /* Structure of this do file:
 1. Preliminaries
 2. Constructing HLO Panel with observations in 2010, 2018 and 2020
 */
-/******************************************************************************/
+*==============================================================================*
 
 set more off
 clear
@@ -265,3 +268,4 @@ replace genmiss=1 if inlist(wbcode,"MUS","NAM","NPL","SYC","SSD")
 replace genmiss=1 if inlist(wbcode,"LKA","SWZ","TJK","UGA","ZMB","ZWE")
 br wbcode year hlo_mf_source hlo_mf_rep hlo_m_rep hlo_f_rep ///
 	hlo_mf_source_2020 hlo_mf_year_2020 if year>1999 & year<2021 & genmiss==1
+

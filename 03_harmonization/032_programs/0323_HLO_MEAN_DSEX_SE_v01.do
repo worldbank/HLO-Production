@@ -1,7 +1,14 @@
-*Author: Syedah Aroob Iqbal
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-*This do file:
-*1)	Calculates standard errors for HLOs in HLO_v01:
+* Step: 0323_HLO_MEAN_DSEX_SE_v01
+* Authors: Most of the code is from Aroob's HLO_v01 folder on the WBG Network, with some minor syntax changes by Justin (EduAnalytics team)
+* Date created: 2024-November-13
+
+/* Description: This do file calculates standard errors for HLOs in HLO_v01: */
+
+*==============================================================================*
 
 set seed 10051990
 set sortseed 10051990

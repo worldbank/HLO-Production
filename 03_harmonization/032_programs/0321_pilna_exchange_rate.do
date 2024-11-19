@@ -1,9 +1,17 @@
-*Author: Syedah Aroob Iqbal
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-/*This do file:
+* Step: 0321_pilna_exchange_rate
+* Authors: Most of the code is from Aroob's HLO_v01 folder on the WBG Network, with some minor syntax changes by Justin (EduAnalytics team)
+* Date created: 2024-November-13
+
+/* Description:  This do file
 1)	Develops an exchange rate between PILNA and EGRA
 2)  Develops standard error for exchange rate between PILNA and EGRA
 */
+
+*==============================================================================*
 
 *Step 1:
 *---------------------------------------------------------------------------

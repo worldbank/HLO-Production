@@ -1,9 +1,14 @@
-*Author: Syedah Aroob Iqbal
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-/*****************************************************************
-This do file :
--	Harmonizes all country level means to HLO units
-*****************************************************************/
+* Step: 0322_HLO_MEAN_DSEX_v01
+* Authors: Most of the code is from Aroob's HLO_v01 folder on the WBG Network, with some minor syntax changes by Justin (EduAnalytics team)
+* Date created: 2024-November-13
+
+/* Description: This do file harmonizes all country level means to HLO units  */
+
+*==============================================================================*
 
 use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
 *As Uzbekistan's assessment provides TIMSS-equivalent scores:

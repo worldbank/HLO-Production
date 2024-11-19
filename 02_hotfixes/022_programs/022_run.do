@@ -1,35 +1,18 @@
-version 16
 *==============================================================================*
-* HLO
-* Project information at: https://github.com/worldbank/
-*
-* TASK 02_Hotfixes: fills in observations that we couldn't replicated with data from the original WLD_ALL network file
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
+
+* Step: 022_run
+* Authors: EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Date created: 2024-November-13
+
+/* Description: Runs the .do file needed to execute Step 2 of the Repo */
 *==============================================================================*
 
 
-
-*-------------------------------------------------------------------------------
-* Setup for this task
-*-------------------------------------------------------------------------------
-* Check that project profile was loaded, otherwise stops code
-cap assert ${HLO_profile_is_loaded} == 1
-if _rc != 0 {
-  noi disp as error "Please execute the profile_HLO_production initialization do in the root of this project and try again."
-  exit
-}
-
-*-------------------------------------------------------------------------------
-* Execution parameters
-global master_seed  17893   // Ensures reproducibility
-
-
-*-------------------------------------------------------------------------------
-* Subroutines for this task
-*-------------------------------------------------------------------------------
-
+* =========================================== *
+* Run the do file
+* =========================================== *
 do "${clone}/02_hotfixes/022_programs/0221_prepare.do"
-
-
-
 *-----------------------------------------------------------------------------
 

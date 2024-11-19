@@ -1,14 +1,13 @@
 *==============================================================================*
 * Harmonized Learning Outcome (HLO)
-* Project information at: https://github.com/worldbank/...
+* Project information at: https://github.com/worldbank/HLO-production
 
-* 02 DATA QUERY
-* EduAnalytics Team
-* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org)
+* Step: 0121 DATA QUERY
+* Authors: Felipe Puga Novillo (fpuganovillo@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
 * Date created: 2024-November-11
 
-/* Description: this do-file downloads the Country Level Outcomes (CLOs) from 
-datalibweb. */
+/* Description: this do-file downloads the Country Level Outcomes (CLOs) from datalibweb. 
+This is the first step in re-creating the WLD_ALL...dta file that is neccesary to replicate the 2020 HLO */
 *==============================================================================*
 
 * =========================================== *

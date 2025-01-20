@@ -15,17 +15,13 @@ use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
 *use "${clone}/02b_exchange_rates/021b_rawdata/Metadata_HLO_sd.dta", clear
 
 *** Edits to WLD_ALL to match format of Metadata file
-
-
-*key issue: the WLD_ALL file we are working with does not have the sd variable that was used in the metadata file
-
+gen sd = se * sqrt(n)
 
 *-----------
 * Clean
 * ----------
 
 // drop grades
-
     drop if grade == "2" | grade == "3" 
 
 // gen levels
@@ -37,9 +33,8 @@ use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
 	drop if dup ==2
 
 //other
-
 	drop dup
-	*replace sd = . if sd == 0 // JK: sd not in the WLD_ALL dataset
+	replace sd = . if sd == 0
 	replace year = 2014 if cntabb == "MDG" & test == "PASEC" & year == 2015 // recent MDG data
     replace test = "PASEC_2014" if test == "PASEC" & year == 2014
     replace year = 2014 if cntabb == "TGO" & test == "PASEC" & year == 2006	 // keep Togo for within PASEC conversion
@@ -67,7 +62,7 @@ use "${clone}/02b_exchange_rates/021b_rawdata/master.dta", replace
     drop if score ==. 
     rename score `var'score
     rename se `var'se
-    *rename sd `var'sd //JK: sd not in the WLD_ALL dataset
+    rename sd `var'sd 
     save "${clone}/02b_exchange_rates/021b_rawdata/individual_datasets/`var'_`sub'_`level'.dta", replace
     }
     }
@@ -150,14 +145,14 @@ use "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_PISA_TIMSS_ma
         foreach lev in sec pri {
     use "${clone}/02b_exchange_rates/021b_rawdata/master2.dta", replace
             cap append using "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_`anchor'_`ref'_`sub'_`lev'"
-            save "${clone}/02b_exchange_rates/master2.dta", replace
+            save "${clone}/02b_exchange_rates/021b_rawdata/master2.dta", replace
         }
         }
         }
         }
 
     drop if mean_linking == 0 | mean_linking ==.
-    collapse mean_linking ratio_linking coef coef_c cons cons_c N R, by(subject test reftest) // linklink* sdlink*
+    collapse mean_linking ratio_linking coef coef_c cons cons_c linlink* sdlink* N R, by(subject test reftest)
     sort test subject
 
     * keep and generate final exchange rates
@@ -213,10 +208,6 @@ use "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_PISA_TIMSS_ma
     keep test subject level reftest *_i *link* cons N R
 
 save "${clone}/023b_output/xchange_new.dta", replace 
-
-
-
-
 
 
 

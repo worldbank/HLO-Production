@@ -23,9 +23,15 @@ merge 1:1 cntabb test year subject grade using "${clone}/01_data/013_output/WLD_
 
 * Note: our replicated database is representend by all the "_clo variables"
 
+* Saving the file that we can use to compare the two datasets
+save "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_for_comparison.dta", replace 
+
+*Preliminary comparison of the two datasets, looking for differences in the scores for those that were matched during the merge (i.e. _merge == 3)
+compare score score_clo if _merge == 3
+
 * Below is our so called "hotfix" to make our replicated database useable in Step 3
 * This loop replaces any empty observations in our replicated database with the values from the original database
-local variables = "score se score_m se_m score_f se_f n_f n_m n"
+local variables = "score se score_m se_m score_f se_f" // JK edit: n_f n_m n"
 foreach var of local variables {
 	replace `var'_clo = `var' if _merge == 1 // This replaces the empty observations in the replicated database with the values from the original database
 	replace `var'_clo = `var' if _merge == 3 & `var'_clo != `var' // This replaces the matched observations during the merge that have differing values with the values from the original database
@@ -35,11 +41,6 @@ foreach var of local variables {
 * We do not need these extra observations for the task of replicating HLO 2020. We will, however, want to use them for future HLO updates 
 drop if _merge == 2
 
-* Saving the file that we can use to compare the two datasets
-save "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_for_comparison.dta", replace 
-
-*Preliminary comparison of the two datasets, looking for differences in the scores for those that were matched during the merge (i.e. _merge == 3)
-compare score score_clo if _merge == 3
 
 * ========================================================== *
 * Preparing the Replicated Dataset for Step 3

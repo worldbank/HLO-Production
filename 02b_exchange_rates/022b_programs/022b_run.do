@@ -13,6 +13,7 @@
 * =========================================== *
 * Run the do file
 * =========================================== *
-do "${clone}/02_hotfixes/022_programs/0221_prepare.do"
+do "${clone}/02b_exchange_rates/022b_programs/0222b_exchange_rates_values.do"
+do "${clone}/02b_exchange_rates/022b_programs/0222b_exchange_rates_se.do"
 *-----------------------------------------------------------------------------
 

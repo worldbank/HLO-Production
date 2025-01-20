@@ -1,17 +1,24 @@
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-/* =====================================================================================================
+* Step: 0221 - Prepare Hotfixes for data
+* Authors: Justin Kleczka (jkleczka@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Date created: 
 
-Title: Measuring Human Capital
-Description: 
+/* Description: 
 
-   [1]  Reproduce exchange rates from HCI
-   [2]  Systematize process
-   [3]  Produce exchange rates using multiple methods: regression, linear, mean, ratio
+*/
+*==============================================================================*
 
-=====================================================================================================**/
+use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
+*use "${clone}/02b_exchange_rates/021b_rawdata/Metadata_HLO_sd.dta", clear
 
-global path "[enter file path]"
-use "$path/Metadata_HLO_sd.dta", replace
+*** Edits to WLD_ALL to match format of Metadata file
+
+
+*key issue: the WLD_ALL file we are working with does not have the sd variable that was used in the metadata file
+
 
 *-----------
 * Clean
@@ -31,19 +38,19 @@ use "$path/Metadata_HLO_sd.dta", replace
 
 //other
 
-	drop adm1 tag dup indicator
-	replace sd = . if sd == 0
+	drop dup
+	*replace sd = . if sd == 0 // JK: sd not in the WLD_ALL dataset
 	replace year = 2014 if cntabb == "MDG" & test == "PASEC" & year == 2015 // recent MDG data
     replace test = "PASEC_2014" if test == "PASEC" & year == 2014
     replace year = 2014 if cntabb == "TGO" & test == "PASEC" & year == 2006	 // keep Togo for within PASEC conversion
     
-save "$path/master.dta", replace
+save "${clone}/02b_exchange_rates/021b_rawdata/master.dta", replace
 
 *-----------------------------------------
 * Create indvidual datasets for each test
 *-----------------------------------------
 
-use "$path/master.dta", replace
+use "${clone}/02b_exchange_rates/021b_rawdata/master.dta", replace
 
 	drop if n_res != 1 
 	drop if test == "SACMEQ" & cntabb == "ZAF" // not nationally representative
@@ -54,14 +61,14 @@ use "$path/master.dta", replace
     foreach level in pri sec {
     foreach sub in reading math science {
     foreach var in PISA TIMSS LLECE SACMEQ EGRA PIRLS MLA PASEC PASEC_2014 {
-    use "$path/master.dta", replace
+    use "${clone}/02b_exchange_rates/021b_rawdata/master.dta", replace
 	
 	keep if test == "`var'" & subject == "`sub'" & level == "`level'"
     drop if score ==. 
     rename score `var'score
     rename se `var'se
-    rename sd `var'sd
-    save "$path/`var'_`sub'_`level'.dta", replace
+    *rename sd `var'sd //JK: sd not in the WLD_ALL dataset
+    save "${clone}/02b_exchange_rates/021b_rawdata/individual_datasets/`var'_`sub'_`level'.dta", replace
     }
     }
     }
@@ -76,14 +83,14 @@ use "$path/master.dta", replace
     foreach ref in TIMSS PIRLS SACMEQ PASEC { 
     foreach sub in math science reading { 
     foreach lev in pri sec { 
-    cap use "$path/`anchor'_`sub'_`lev'.dta", replace
-    cap nearmrg cntabb using "$path/`ref'_`sub'_`lev'.dta", nearvar(year) limit(4) roundup type(m:m) genmatch(linkyear)
+    cap use "${clone}/02b_exchange_rates/021b_rawdata/individual_datasets/`anchor'_`sub'_`lev'.dta", replace
+    cap nearmrg cntabb using "${clone}/02b_exchange_rates/021b_rawdata/individual_datasets/`ref'_`sub'_`lev'.dta", nearvar(year) limit(4) roundup type(m:m) genmatch(linkyear)
     encode cntabb, gen(cnt_num)
 
     set seed 1122335588
     gen rand = runiform()
     egen rank = rank(rand)
-    gen n = _N
+    replace n = _N
     gen randselect = 1 if rank > n/2 // random set of countries and time intervals
 
     gen coef = .
@@ -95,7 +102,7 @@ use "$path/master.dta", replace
     gen cons_c = .
     gen R_c = .   
 
-    save "$path/doubloons_`anchor'_`ref'_`sub'_`lev'", replace
+    save "${clone}/02b_exchange_rates/021b_rawdata/doubloons/doubloons_`anchor'_`ref'_`sub'_`lev'", replace
 
     cap noisily eststo `anchor'_`ref'_`sub'_`lev': reg `ref'score `anchor'score // i.year i.cnt_num 
             
@@ -124,7 +131,7 @@ use "$path/master.dta", replace
        replace N = _N
 
     cap collapse mean_linking* ratio_linking* coef* cons* linlink* sdlink* N R, by(subject test reftest)
-    save "$path/link_`anchor'_`ref'_`sub'_`lev'", replace
+    save "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_`anchor'_`ref'_`sub'_`lev'", replace
     }
     }
     }
@@ -134,23 +141,23 @@ use "$path/master.dta", replace
 * Merge exchange rates datasets -- need to convert RSAT-RSAT -- to RSAT-ISAT for linear
 *-----------------------------------------
 
-use "$path/link_PISA_TIMSS_math_sec.dta", replace
-    save "$path/master2.dta", replace
+use "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_PISA_TIMSS_math_sec.dta", replace
+    save "${clone}/02b_exchange_rates/021b_rawdata/master2.dta", replace
 
     foreach anchor in PISA SACMEQ LLECE PASEC EGRA MLA PASEC_2014 {
         foreach ref in TIMSS PIRLS SACMEQ PASEC {
         foreach sub in math reading science {
         foreach lev in sec pri {
-    use "$path/master2.dta", replace
-            cap append using "$path/link_`anchor'_`ref'_`sub'_`lev'"
-            save "$path/master2.dta", replace
+    use "${clone}/02b_exchange_rates/021b_rawdata/master2.dta", replace
+            cap append using "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_`anchor'_`ref'_`sub'_`lev'"
+            save "${clone}/02b_exchange_rates/master2.dta", replace
         }
         }
         }
         }
 
     drop if mean_linking == 0 | mean_linking ==.
-    collapse mean_linking ratio_linking coef coef_c cons cons_c linlink* sdlink* N R, by(subject test reftest)
+    collapse mean_linking ratio_linking coef coef_c cons cons_c N R, by(subject test reftest) // linklink* sdlink*
     sort test subject
 
     * keep and generate final exchange rates
@@ -205,15 +212,25 @@ use "$path/link_PISA_TIMSS_math_sec.dta", replace
 
     keep test subject level reftest *_i *link* cons N R
 
-save "$path/xchange_new.dta", replace 
+save "${clone}/023b_output/xchange_new.dta", replace 
+
+
+
+
+
+
+
+/* LEFTOVER CODE FROM NOAM'S ORIGINAL EXCHANGE RATE CODE
+
+
 
 *-----------------------------------------
 * Generate new HLO scores
 *-----------------------------------------
 
-use "$path/master.dta", replace
+use "${clone}/master.dta", replace
     replace year = 2006 if cntabb == "TGO" & test == "PASEC" & year == 2014  // keep Togo for within PASEC conversion
-	merge m:m test level subject using "$path/xchange_new.dta"
+	merge m:m test level subject using "${clone}/xchange_new.dta"
 
 ** Generate core HLO for Nature paper, regression & linear methods
 
@@ -241,13 +258,13 @@ corr HLO HLO_n
 gen level = "pri" if inlist(grade,"2","2-4","3","4","5","6")
     replace level = "sec" if missing(level)
 
-save "$path/HLO_nature.dta", replace
+save "${clone}/HLO_nature.dta", replace
 
 *--------- Robustness Tests File
 
-use "$path/master.dta", replace
+use "${clone}/master.dta", replace
     replace year = 2006 if cntabb == "TGO" & test == "PASEC" & year == 2014  // keep Togo for within PASEC conversion
-	merge m:m test level subject test using "$path/xchange_new.dta"
+	merge m:m test level subject test using "${clone}/xchange_new.dta"
 	replace score = 456 if country == "China" // recent China score from SES adjustment
 	replace score = 456 if country == "China" // recent China score from SES adjustment
 	replace score = 456 if country == "China" // recent China score from SES adjustment
@@ -277,4 +294,4 @@ use "$path/master.dta", replace
 
 	keep cntabb year level test n_res sd subject country score se HLO_se reftest hlo*
 	
-save "$path/robustness.dta", replace
+save "${clone}/robustness.dta", replace

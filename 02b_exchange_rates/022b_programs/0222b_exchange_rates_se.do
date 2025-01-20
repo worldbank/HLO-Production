@@ -1,9 +1,16 @@
-*Author: Syedah Aroob Iqbal
+*==============================================================================*
+* Harmonized Learning Outcomes (HLO)
+* Project information at: https://github.com/worldbank/HLO-production
 
-/*This do file:
-1)	Develops standard errors for exchange rate for Harmonized Learning Outcomes.
+* Step: 0221 - Prepare Hotfixes for data
+* Authors: Justin Kleczka (jkleczka@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Date created: 2024-November-13
+
+/* Description: 
+
 */
-clear
+*==============================================================================*
+
 clear matrix
 clear mata
 set maxvar 120000
@@ -11,7 +18,7 @@ global master_seed  10051990
 set seed 10051990 
 set sortseed 10051990   // Ensures reproducibility
 
-use "$clone/01_input/WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX.dta", clear
+use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
 
 *-----------------------------------------
 *  clean data
@@ -33,11 +40,11 @@ use "$clone/01_input/WLD_ALL_ALL_v01_M_v01_A_MEAN_DSEX.dta", clear
 
     keep cntabb test year subject level score se n
 
-save "$clone/02_exchangerate/temp/master_exchangerate.dta", replace
+save "$clone/02b_exchange_rates\021b_rawdata\temp\master_exchangerate.dta", replace
 
 
 	
-use "$clone/02_exchangerate/temp/master_exchangerate.dta", clear
+use "$clone/02b_exchange_rates\021b_rawdata\temp\master_exchangerate.dta", clear
 
 set trace on
 foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
@@ -163,7 +170,7 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 				gen er_`assessment'_`reference_assessment'`i' = score_`i'`reference_assessment'/score_`i'`assessment'
 			}
 			collapse er_`assessment'_`reference_assessment'*, by(subject level)
-			save "$clone/02_exchangerate/temp/exchangerate`assessment'_`reference_assessment'_`s'_se_int.dta", replace	
+			save "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`assessment'_`reference_assessment'_`s'_se_int.dta", replace	
 
 			
 			if !inlist("`assessment'","PASEC","PASEC_2014","PILNA") {
@@ -171,14 +178,14 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 				egen exchange_rate_`assessment'_se = rowsd(er_*)
 				gen assessment = "`assessment'"
 				keep assessment subject level exchange_rate_`assessment'_se
-				save "$clone/02_exchangerate/temp/exchangerate`assessment'_`reference_assessment'_`s'_se.dta", replace	
+				save "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`assessment'_`reference_assessment'_`s'_se.dta", replace	
 
 			}
 			
 			if inlist("`assessment'","PASEC_2014") {
 				local i_reference_assessment = "SACMEQ"
 			
-				merge 1:1 subject level using "$clone/02_exchangerate/temp/exchangerate`reference_assessment'_`i_reference_assessment'_`s'_se_int.dta", nogen
+				merge 1:1 subject level using "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`reference_assessment'_`i_reference_assessment'_`s'_se_int.dta", nogen
 				
 			
 				*Drawing 100 values 
@@ -207,7 +214,7 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 				
 				if inlist("`assessment'","PASEC","PILNA") {
 				
-					merge 1:1 subject level using "$clone/02_exchangerate/temp/exchangerate`reference_assessment'_`f_reference_assessment'_`s'_se_int.dta"	, nogen		
+					merge 1:1 subject level using "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`reference_assessment'_`f_reference_assessment'_`s'_se_int.dta"	, nogen		
 					*Drawing 100 values 
 					forvalues i = 1(1)100 {
 						forvalues j = 1(1)100 {
@@ -218,7 +225,7 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 				
 				if inlist("`assessment'","PASEC_2014") {
 				
-					merge 1:1 subject level using "$clone/02_exchangerate/temp/exchangerate`i_reference_assessment'_`f_reference_assessment'_`s'_se_int.dta"	, nogen		
+					merge 1:1 subject level using "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`i_reference_assessment'_`f_reference_assessment'_`s'_se_int.dta"	, nogen		
 					
 					*Drawing 100 values 
 					egen er_`assessment'_`i_reference_assessment'_se  = rowsd(er_`assessment'_`i_reference_assessment'*)
@@ -234,7 +241,7 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 				egen exchange_rate_`assessment'_se = rowsd(er_`assessment'_`f_reference_assessment'_*)
 				gen assessment = "`assessment'"
 				keep assessment subject level exchange_rate_`assessment'_se
-				save "$clone/02_exchangerate/temp/exchangerate`assessment'_`f_reference_assessment'_`s'_se.dta", replace	
+				save "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`assessment'_`f_reference_assessment'_`s'_se.dta", replace	
 			}
 				
 				
@@ -245,15 +252,15 @@ foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 
 *Append all standard errors:
 clear
-touch "$clone/02_exchangerate/temp/exchangerate_se.dta", replace
+touch "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate_se.dta", replace
 foreach assessment in PISA LLECE SACMEQ PASEC PASEC_2014 EGRA PILNA {
 	foreach s in reading math science {
-		cap noisily: append using "$clone/02_exchangerate/temp/exchangerate`assessment'_PIRLS_`s'_se.dta" 
-		cap noisily : append using "$clone/02_exchangerate/temp/exchangerate`assessment'_TIMSS_`s'_se.dta"
+		cap noisily: append using "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`assessment'_PIRLS_`s'_se.dta" 
+		cap noisily : append using "$clone/02b_exchange_rates\021b_rawdata\temp\exchangerate`assessment'_TIMSS_`s'_se.dta"
 	}
 }
 keep assessment subject level exchange_rate_PISA_se exchange_rate_LLECE_se exchange_rate_SACMEQ_se exchange_rate_PASEC_se exchange_rate_PASEC_2014_se exchange_rate_EGRA_se exchange_rate_PILNA_se
 egen exchangerate_se = rowtotal(exchange_rate*)
 keep subject level assessment exchangerate_se
 *cf _all using "$clone/02_exchangerate/output/exchange_rates_se.dta", verbose
-save "$clone/02_exchangerate/output/exchange_rates_se.dta", replace
+save "$clone/02b_exchange_rates\021b_rawdata\temp\exchange_rates_se.dta", replace

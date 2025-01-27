@@ -13,7 +13,7 @@
 * =========================================== *
 * Run the do file
 * =========================================== *
-do "${clone}/02b_exchange_rates/022b_programs/0222b_exchange_rates_values.do"
+do "${clone}/02b_exchange_rates/022b_programs/0221b_exchange_rate_values.do"
 do "${clone}/02b_exchange_rates/022b_programs/0222b_exchange_rates_se.do"
 *-----------------------------------------------------------------------------
 

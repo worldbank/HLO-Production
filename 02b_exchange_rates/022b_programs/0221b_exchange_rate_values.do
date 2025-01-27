@@ -2,8 +2,8 @@
 * Harmonized Learning Outcomes (HLO)
 * Project information at: https://github.com/worldbank/HLO-production
 
-* Step: 0221 - Prepare Hotfixes for data
-* Authors: Justin Kleczka (jkleczka@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
+* Step: 0221b - Creating Exchange Rate Values
+* Authors: Noam Angrist, Justin Kleczka (jkleczka@worldbank.org), EduAnalytics Team, World Bank Group [eduanalytics@worldbank.org]
 * Date created: 
 
 /* Description: 
@@ -11,11 +11,54 @@
 */
 *==============================================================================*
 
+*Start with our replicated WLD_ALL file:
 use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
-*use "${clone}/02b_exchange_rates/021b_rawdata/Metadata_HLO_sd.dta", clear
 
-*** Edits to WLD_ALL to match format of Metadata file
-gen sd = se * sqrt(n)
+*For reference, this is the dataset that this code used as the original input: "${clone}/02b_exchange_rates/021b_rawdata/Metadata_HLO_sd.dta"
+* We will be making edits below to our WLD_ALL file to match the format of the Metadata file
+
+*Our WLD_All file does not have an "sd" variable, so we create one ourselves (though it does not match that of the original input file)
+gen sd_clo = se * sqrt(n)
+
+* Edits to observations to ensure they are matched in the merge later on:
+replace subject = "math" if cntabb == "LKA" & year == 2009
+replace n_res = 1 if cntabb == "LKA" & year == 2009
+replace test = "PASEC" if test == "PASEC_2014" & grade == "6"
+replace test = "PASEC" if test == "PASEC_2014" & year == 2015
+
+* Renaming the variables from our input file so we can distinguish them when we merge with the Metadata file
+rename (score se score_m se_m score_f se_f n_res) (score_clo se_clo score_m_clo se_m_clo score_f_clo se_f_clo n_res_clo)
+
+* Save as tempfile for merging
+tempfile wld
+save `wld'
+
+* Now we will merge with the Metadata file
+use "${clone}/02b_exchange_rates/021b_rawdata/Metadata_HLO_sd.dta", clear
+keep cntabb adm1 year grade test subject tag n_res indicator score se score_m se_m score_f se_f
+merge m:1 cntabb year grade test subject using `wld'
+
+* We have 2 remaining observations that do not match. In the code below, we will describe the differences and hotfix them
+
+* n_res does not match for ETH 2010 grades 2-4 EGRA
+replace n_res_clo = 0 if cntabb == "ETH" & year == 2010
+
+*  Tuvalu 2016 EGRA has differences in all variables. We will hotfix this using the values that are in the Metadata file
+replace score_clo = score if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+replace se_clo = se if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+replace score_m_clo = score_m if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+replace se_m_clo = se_m if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+replace score_f_clo = score_f if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+replace se_f_clo = se_f if cntabb == "TUV" & year == 2016 & grade == "2-4" & test == "EGRA"
+
+* Our WLD_ALL has more observations than the Metadata file, so we will drop those excess observations
+drop if _merge == 2
+
+* Dropping the variables from Metadata so we can replace them with the variables from WLD_ALL
+drop score se score_m se_m score_f se_f n_res _merge
+rename (score_clo se_clo score_m_clo se_m_clo score_f_clo se_f_clo n_res_clo sd_clo) (score se score_m se_m score_f se_f n_res sd)
+
+*Now, we have a dataset that perfectly matches Metadata_sd
 
 *-----------
 * Clean
@@ -85,7 +128,7 @@ use "${clone}/02b_exchange_rates/021b_rawdata/master.dta", replace
     set seed 1122335588
     gen rand = runiform()
     egen rank = rank(rand)
-    replace n = _N
+    replace n = _N 
     gen randselect = 1 if rank > n/2 // random set of countries and time intervals
 
     gen coef = .
@@ -207,7 +250,7 @@ use "${clone}/02b_exchange_rates/021b_rawdata/linked_datasets/link_PISA_TIMSS_ma
 
     keep test subject level reftest *_i *link* cons N R
 
-save "${clone}/023b_output/xchange_new.dta", replace 
+save "${clone}/02b_exchange_rates/023b_output/xchange_new.dta", replace 
 
 
 

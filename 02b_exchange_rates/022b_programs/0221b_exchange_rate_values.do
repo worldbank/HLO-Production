@@ -20,7 +20,7 @@ use "${clone}/02_hotfixes/023_output/WLD_ALL_ALL_clo_final.dta", clear
 *Our WLD_All file does not have an "sd" variable, so we create one ourselves (though it does not match that of the original input file)
 gen sd_clo = se * sqrt(n)
 
-* Edits to observations to ensure they are matched in the merge later on:
+* Edits to observations to ensure they are properly matched in the merge later on:
 replace subject = "math" if cntabb == "LKA" & year == 2009
 replace n_res = 1 if cntabb == "LKA" & year == 2009
 replace test = "PASEC" if test == "PASEC_2014" & grade == "6"
@@ -54,9 +54,12 @@ replace se_f_clo = se_f if cntabb == "TUV" & year == 2016 & grade == "2-4" & tes
 * Our WLD_ALL has more observations than the Metadata file, so we will drop those excess observations
 drop if _merge == 2
 
+*Drop n_res_clo and use n_res from Metadata as a hotfix for all the differences in this variable
+drop n_res_clo
+
 * Dropping the variables from Metadata so we can replace them with the variables from WLD_ALL
-drop score se score_m se_m score_f se_f n_res _merge
-rename (score_clo se_clo score_m_clo se_m_clo score_f_clo se_f_clo n_res_clo sd_clo) (score se score_m se_m score_f se_f n_res sd)
+drop score se score_m se_m score_f se_f _merge
+rename (score_clo se_clo score_m_clo se_m_clo score_f_clo se_f_clo sd_clo) (score se score_m se_m score_f se_f sd)
 
 *Now, we have a dataset that perfectly matches Metadata_sd
 
@@ -72,7 +75,9 @@ rename (score_clo se_clo score_m_clo se_m_clo score_f_clo se_f_clo n_res_clo sd_
     replace level = "sec" if missing(level)
 
 // duplicate check
-	bys cntabb year subject level test: gen dup = cond(_N==1,0,_n)
+	set sortseed 123456
+    sort cntabb year subject level test, stable
+    bysort cntabb year subject level test: gen dup = cond(_N==1,0,_n)
 	drop if dup ==2
 
 //other
